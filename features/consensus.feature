@@ -4,7 +4,7 @@ Feature: Use Cases for the consensus service and Threshold keys
     Given a first account with more than 100 hbars
     When A topic is created with the memo "Taxi rides" with the first account as the submit key
     And The message "Ride from A to B" is published to the topic
-    Then The message is received by the topic and can be printed to the console
+    Then The message "Ride from A to B" is received by the topic and can be printed to the console
 
   Scenario: Create a topic and publish a message with a threshold key
     Given A first account with more than 100 hbars
@@ -12,4 +12,4 @@ Feature: Use Cases for the consensus service and Threshold keys
     And A 1 of 2 threshold key with the first and second account
     When A topic is created with the memo "Taxi rides" with the threshold key as the submit key
     And The message "Ride from A to B" is published to the topic
-    Then The message is received by the topic and can be printed to the console
+    Then The message "Ride from A to B" is received by the topic and can be printed to the console

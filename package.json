@@ -1,0 +1,26 @@
+{
+  "name": "tha-coding-challenge",
+  "version": "0.0.1",
+  "description": "basic Typescript project with Gherkin using HCS and HTS",
+  "main": "index.js",
+  "repository": "git@github.com:drgorb/tha-coding-challenge.git",
+  "author": "Micha Roon <micha.roon@managination.com>",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test:cucumber": "cucumber-js -p default --tags 'not @wip' --exit"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^10.8.0",
+    "@hashgraph/sdk": "^2.47.0",
+    "@types/cucumber": "^7.0.0",
+    "@types/node": "^20.14.9",
+    "cucumber-pretty": "^6.0.1",
+    "cucumber-tsflow": "^4.4.4",
+    "mocha": "^10.5.2",
+    "nodemon": "^3.1.4",
+    "rimraf": "^5.0.7",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.2"
+  }
+}

@@ -8,6 +8,7 @@
   "license": "MIT",
   "private": false,
   "scripts": {
+    "test:dev:cucumber": "cucumber-js -p default --tags '@dev' --exit",
     "test:cucumber": "cucumber-js -p default --tags 'not @wip' --exit"
   },
   "devDependencies": {

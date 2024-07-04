@@ -4,7 +4,7 @@ import { AccountCreateTransaction, AccountId, Client, PrivateKey } from "@hashgr
 const client = Client.forTestnet()
 
 async function main() {
-  const account = accounts[0]
+  const account = {id: "0.0.3672483", privateKey: process.env.DEV_KEY || "empty"}
   const MY_ACCOUNT_ID = AccountId.fromString(account.id);
   const MY_PRIVATE_KEY = PrivateKey.fromStringED25519(account.privateKey);
   client.setOperator(MY_ACCOUNT_ID, MY_PRIVATE_KEY);

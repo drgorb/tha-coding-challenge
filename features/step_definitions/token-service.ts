@@ -1,6 +1,13 @@
 import { Given, Then, When } from "@cucumber/cucumber";
 import { accounts } from "../../src/config";
-import { AccountBalanceQuery, AccountId, Client, PrivateKey } from "@hashgraph/sdk";
+import {
+  AccountBalanceQuery,
+  AccountId,
+  Client,
+  PrivateKey,
+  TokenCreateTransaction,
+  TokenInfoQuery
+} from "@hashgraph/sdk";
 import assert from "node:assert";
 
 const client = Client.forTestnet()
@@ -10,6 +17,7 @@ Given(/^A Hedera account with more than (\d+) hbar$/, async function (expectedBa
   const MY_ACCOUNT_ID = AccountId.fromString(account.id);
   const MY_PRIVATE_KEY = PrivateKey.fromStringED25519(account.privateKey);
   client.setOperator(MY_ACCOUNT_ID, MY_PRIVATE_KEY);
+  this.accountId = client.getOperator()?.accountId
 
 //Create the query request
   const query = new AccountBalanceQuery().setAccountId(MY_ACCOUNT_ID);
@@ -18,27 +26,39 @@ Given(/^A Hedera account with more than (\d+) hbar$/, async function (expectedBa
 
 });
 
-When(/^I create a token named Test Token \(HTT\)$/, function () {
-
+When(/^I create a token named "([^"]*)" \("([^"]*)"\)$/, async function (name: string, symbol:string) {
+  const ctt = await new TokenCreateTransaction()
+      .setDecimals(2)
+      .setTokenName(name)
+      .setTokenSymbol(symbol)
+      .setAdminKey(this.accountId.publicKey)
+      .setTreasuryAccountId(this.accountId)
+      .execute(client)
+  const receipt = await ctt.getReceipt(client)
+  this.tokenId = receipt.tokenId
 });
 
-Then(/^The token has the name "([^"]*)"$/, function () {
-
+Then(/^The token has the name "([^"]*)"$/, async function (name: string) {
+  const tokenInfo = await new TokenInfoQuery().setTokenId(this.tokenId).execute(client);
+  assert.ok(tokenInfo.name == name)
 });
 
-Then(/^The token has the symbol "([^"]*)"$/, function () {
-
+Then(/^The token has the symbol "([^"]*)"$/, async function (symbol: string) {
+  const tokenInfo = await new TokenInfoQuery().setTokenId(this.tokenId).execute(client);
+  assert.ok(tokenInfo.symbol == symbol)
 });
 
-Then(/^The token has (\d+) decimals$/, function () {
-
+Then(/^The token has (\d+) decimals$/, async function (decimals: number) {
+  const tokenInfo = await new TokenInfoQuery().setTokenId(this.tokenId).execute(client);
+  assert.ok(tokenInfo.decimals == decimals)
 });
 
-Then(/^The token is owned by the account$/, function () {
-
+Then(/^The token is owned by the account$/, async function () {
+  const tokenInfo = await new TokenInfoQuery().setTokenId(this.tokenId).execute(client);
+  assert.ok(tokenInfo.treasuryAccountId?.equals(this.accountId))
 });
 
-Then(/^An attempt to mint (\d+) additional tokens succeeds$/, function () {
+Then(/^An attempt to mint (\d+) additional tokens succeeds$/, function (tokens: number) {
 
 });
 When(/^I create a fixed supply token named Test Token \(HTT\) with (\d+) tokens$/, function () {
